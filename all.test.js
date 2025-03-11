@@ -1,4 +1,7 @@
-import {Ship, Coordinate, Gameboard} from "./main.js"
+import {Ship, Coordinate, Gameboard} from "./classes.js"
+import {Manager} from "./manager.js"
+
+
 const testGameboard = new Gameboard()
 const testShip = testGameboard.createBattleship()
 testGameboard.placeShip(testShip, 0, 3, "right")
@@ -6,8 +9,8 @@ test("length is larger than 0", ()=> {
     expect(testShip.length).toBeGreaterThanOrEqual(0);
 }
 )
-test("length is smaller than 4", ()=> {
-    expect(testShip.length).toBeLessThan(4);
+test("length is smaller than 5", ()=> {
+    expect(testShip.length).toBeLessThan(5);
 }
 )
 
@@ -33,5 +36,22 @@ test("containsShip finds ship in correct grid", () => {
 })
 test("Ship loses 1 health after ReceiveAttack is called on coordinates", () => {
     testGameboard.receiveAttack(0,3);
-    expect(testShip.health).toBe(2)
+    expect(testShip.health).toBe(3)
+})
+test("Return random x,y coordinates and direction", () => {
+    const expectedStrings = ["left","right","up","down"]
+    const randomGrid = testGameboard.randomGrid()
+    expect(randomGrid[0]).toBeGreaterThanOrEqual(0);
+    expect(randomGrid[1]).toBeGreaterThanOrEqual(0);
+    expect(randomGrid[0]).toBeLessThan(10);
+    expect(randomGrid[1]).toBeLessThan(10);
+    const numberofMatches = expectedStrings.filter(x => x == randomGrid[2])
+    expect(numberofMatches.length).toEqual(1);
+})
+test("Place ship has been called during populate board", () => {
+    const gameboardPop = new Gameboard();
+    const placeShipSpy = jest.spyOn(gameboardPop, "placeShip")
+    gameboardPop.populateBoard();
+    expect(placeShipSpy).toHaveBeenCalled()
+    gameboardPop.printBoard()
 })
