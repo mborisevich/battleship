@@ -1,4 +1,4 @@
-export {Ship, Coordinate, Gameboard}
+export {Ship, Coordinate, Gameboard, Player}
 class Ship {
     constructor(name, length){
         this.name = name
@@ -213,6 +213,12 @@ class Player{
         } else {
             console.log("invalid player type")
         }
+    }
+    winRound(){
+        this.wins++
+    }
+    lostRound(){
+        this.losses--
     }
 }
 
