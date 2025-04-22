@@ -5,7 +5,8 @@ class Ship {
         this.length = length;
         this.health = length;
         this.sunk = false;
-        this.position = []
+        this.position = [];
+        this.direction = undefined;
         this.hitHull = [];
     }
     hit(){
@@ -82,7 +83,9 @@ class Gameboard {
     
     #executeAttack(x,y){
         if (this.containsShip(x,y)){
-            this.getShip(x,y).hit()
+            targettedShip=this.getShip(x,y)
+            targettedShip.hit()
+            targettedShip.hitHull.push(x,y)
             this.hits.push([x,y])
             return console.log(`Ship hit at coordinates: x=${x},y=${y}`)
         }
@@ -143,21 +146,29 @@ class Gameboard {
         if (direction == "left" && (x - ship.length >= 0) && !this.#checkCollisions(ship,x,y,direction)){
             for (let i = 0; i < ship.length; i++){
                 this.grid[y][x-i].contains = ship
+                ship.position.push([y,x-i])
+                ship.direction = "left"
             }
             return ship
         } else if (direction == "right" && (x+ ship.length <= 9) && !this.#checkCollisions(ship,x,y,direction)){
             for (let i = 0; i < ship.length; i++){
                 this.grid[y][x+i].contains = ship
+                ship.position.push([y,x+i])
+                ship.direction = "right"
             }
             return ship
         } else if (direction == "up" && (y + ship.length <= 9) && !this.#checkCollisions(ship,x,y,direction)){
             for (let i = 0; i < ship.length; i++){
                 this.grid[y+i][x].contains = ship
+                ship.position.push([y+i,x])
+                ship.direction = "up"
             }
             return ship
         } else if (direction == "down" && (y - ship.length >= 0) && !this.#checkCollisions(ship,x,y,direction)) {
             for (let i = 0; i < ship.length; i++){
                 this.grid[y-i][x].contains = ship
+                ship.position.push([y-i,x])
+                ship.direction = "down"
             }
             return ship
         } else {
